@@ -4,4 +4,4 @@ from bbddcredentials import Connection
 
 base_query =""
 bbdd = Connection()
-Interfaz(bbdd)
+Interface(bbdd)
