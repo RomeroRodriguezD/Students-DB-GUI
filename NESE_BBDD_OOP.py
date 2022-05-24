@@ -2,13 +2,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, font
 import pandas as pd
 import random
-import mysql.connector as sql
+import mysql.connector as sql #Change the module to psycopg2, SQLite or whatever you may need that would do similar function
 from bbddcredentials import credenciales
 #from bbddcredentials import Connection as connection
 
 class NESE_BBDD_GUI(tk.Tk):
-
-    # Interfaz gráfica -> Generar objeto Alumne -> Enviar a la clase que interactúe con SQL.
 
     consideraciones = ["[NESE_A10]", "[NESE_B10]", "[NESE_B20]",
                        "[NESE_B30]", "[NESE_B40]", "[NESE_C10]",
@@ -31,7 +29,7 @@ class NESE_BBDD_GUI(tk.Tk):
         self.window.geometry("800x450")
         #self.window.protocol("WM_DELETE_WINDOW", func=self.Close_BBDD)
         self.font = font.Font(name='TkCaptionFont', exists=True)
-        self.font.config(family='Arial', size=12) #Configura el tamany de lletra dels missatges d'error/informatius
+        self.font.config(family='Arial', size=12) # Set the size of the error/info messages font.
         self.set_notebook()
         self.set_treeview()
         self.set_search()
@@ -84,7 +82,7 @@ class NESE_BBDD_GUI(tk.Tk):
                          'Cristian Jordà', 'Cuntxi López', 'Ana Mora',
                          'Eva Carredas Salvado', 'Carme Martín']
 
-        # Frame para todas las Entry y el botón de búsqueda
+        # Frame for every input of the frame, and the search button
 
         self.busqueda_frame = tk.LabelFrame(self.consulta_frame, text="Criteris de selecció")
         self.busqueda_frame.place(height=120, width=780, rely=0.47, relx=0.014)  # Dejar así fijado el ancho y las rel x e y.
@@ -142,7 +140,6 @@ class NESE_BBDD_GUI(tk.Tk):
         self.username_entry1.place(relx=0.01, rely=0.7, width=100)
 
         # fecha alta
-
         self.fecha_label1 = tk.Label(self.busqueda_frame, text="Data de registre")
         self.fecha_label1.place(relx=0.15, rely=0.5)
         self.fecha_entry1 = tk.Entry(self.busqueda_frame)
@@ -173,7 +170,7 @@ class NESE_BBDD_GUI(tk.Tk):
                          'Cristian Jordà', 'Cuntxi López', 'Ana Mora',
                          'Eva Carredas Salvado', 'Carme Martín']
 
-        # Frame para todas las Entry y el botón de búsqueda
+        # Frame for every input and button. 
         self.agregar_frame = tk.LabelFrame(self.frame_agregar, text="Criteris d'introducció")
         self.agregar_frame.place(height=400, width=780, rely=0.05, relx=0.014)  # Dejar así fijado el ancho y las rel x e y.
 
@@ -364,7 +361,7 @@ class NESE_BBDD_GUI(tk.Tk):
 
     def Load_SQL_data(self, query_table):
 
-        """Carga la base de datos en el Treeview"""
+        """Uploads dataframe to the treeview"""
 
         self.clear_data()
         self.tv1["column"] = list(query_table.columns)
@@ -380,17 +377,17 @@ class NESE_BBDD_GUI(tk.Tk):
 
         return None
 
-    def clear_data(self):  # Limpia el contenido del treeview para poner otra consulta
+    def clear_data(self):  # Cleans treeview, so we can upload next search
         self.tv1.delete(*self.tv1.get_children())
         return None
 
     def Exportar(self):
 
         #global base_query
-        self.new_interaction = SQL_Interaction() # Accede a la base de datos
-        self.new_interaction.Exportar_Excel()  # Exporta y cierra
+        self.new_interaction = SQL_Interaction() 
+        self.new_interaction.Exportar_Excel()  # Exporta y cierra conexión SQL
 
-    def Cargar_CSV(self):
+    def Cargar_CSV(self):   #Opens a filedialog to upload .csv file that will update the DB
 
         try:
             self.archivo = filedialog.askopenfile(mode="r", filetypes=[("Full de valors separats per comes", "*.csv"), ("Tots els arxius", "*.*")])
@@ -403,6 +400,8 @@ class NESE_BBDD_GUI(tk.Tk):
         except AttributeError:
             pass
 
+        # The following classes generates an Alumne() object that will later on be used to get SQL data.
+        
     def Agregar(self):
 
         self.new_student = Alumne()
@@ -458,7 +457,7 @@ class NESE_BBDD_GUI(tk.Tk):
         self.new_interaction = SQL_Interaction()
         self.new_update = self.new_interaction.Actualizar_BBDD_GES(dataframe=self.archivo, data=self.data)
 
-class SQL_Interaction:   #Clase destinada a todas las interacciones con el modelo
+class SQL_Interaction:   #Class container of all the database CRUD methods
 
     def SQL_Query(self, student):
 
@@ -508,8 +507,6 @@ class SQL_Interaction:   #Clase destinada a todas las interacciones con el model
         self.new_connection.close()
         return query_table
        # self.Load_SQL_data()
-
-
 
     def Agregar_Alumno(self, student):
 
@@ -773,7 +770,7 @@ class SQL_Interaction:   #Clase destinada a todas las interacciones con el model
         query_table.to_csv('./Cerca.csv')
 
 
-class Alumne():  #Clase destinada a ejercer de nexo entre la vista y el controlador, pasando parámetros.
+class Alumne():  #Class designed to be a link between the view and the controller, so the last one can interact with database more safely. 
 
     def __init__self(self, **kwargs):
 
