@@ -4,7 +4,6 @@ import pandas as pd
 import random
 import mysql.connector as sql #Change the module to psycopg2, SQLite or whatever you may need that would do similar function
 from bbddcredentials import credenciales
-#from bbddcredentials import Connection as connection
 
 class NESE_BBDD_GUI(tk.Tk):
 
@@ -56,7 +55,6 @@ class NESE_BBDD_GUI(tk.Tk):
         self.ventana_upload = self.notebook.add(self.upload_frame, text="Actualitzar base de dades")
         self.consideraciones_frame = ttk.Frame(self.notebook)
         self.ventana_consideraciones = self.notebook.add(self.consideraciones_frame, text="Llista Con.")
-
 
     def set_treeview(self):
         # Frame para el TreeView
@@ -653,14 +651,11 @@ class SQL_Interaction:   #Class container of all the database CRUD methods
                 self.new_connection.close()
                 messagebox.showinfo(title="Documentació", message="Documentacions afegides amb èxit.")
 
-
              except:
                 messagebox.showerror(title="error", text="Error en el registre, revisi el paràmetre username.")
 
         else:
             messagebox.showerror(title="Falten dades", message="Introdueix documentació i username")
-
-
 
     def Actualizar_BBDD_Batx(self, data, dataframe):
 
@@ -754,7 +749,6 @@ class SQL_Interaction:   #Class container of all the database CRUD methods
                     self.cursor.execute(baixes)  # Actualitza altes/baixes
                     self.new_connection.commit()  # Guarda la transacción
                     self.new_connection.close()
-
 
         except:
             messagebox.showinfo(title="Error",message="Carregui l'arxiu de nou i/o afegeixi data de registre.")
