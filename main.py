@@ -451,7 +451,7 @@ class NESE_BBDD_GUI(tk.Tk):
         self.new_update = self.new_interaction.Actualizar_BBDD_GES(dataframe=self.archivo, data=self.data)
 
 
-# Instancia un objeco que interactúe con SQL
+# Instanced object that interacts with PostgreSQL database. 
 
 global db
 db = SQL_Interaction()
